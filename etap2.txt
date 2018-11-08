@@ -1,0 +1,83 @@
+link do pobrania srodowiska 
+https://dev.mysql.com/downloads/workbench/
+
+etap2
+
+TECHNOLOGIA: 
+
+do stworzenia bazy uzyjemy MySQL
+
+jest to wydajna i bardzo popularna baza danych a co za tym idzie ma swietne wsparcie w internecie
+z internetu:
+link do tej strony : https://hostovita.pl/blog/porownanie-relacyjnych-systemow-zarzadzania-bazami-danych-sqlite-mysql-postgresql/
+najwazniejsze rzeczy:
+
+================================================
+Zalety MySQL
+
+    Latwy w obsludze:
+
+MySQL instaluje sie bardzo latwo. Narzedzia innych firm, w tym wizualne (GUI) robia go niezwykle prostym, aby rozpoczac prace z baza danych.
+
+    Funkcjonalny:
+
+MySQL obsluguje wiele funkcji SQL, które istnieja w SZBD- bezposrednio lub posrednio.
+
+    Bezpieczenstwo:
+
+Wiele funkcji bezpieczenstwa, niektóre dosc zaawansowane, sa wbudowane w MySQL.
+
+    Skalowalny i wydajny:
+
+MySQL moze obslugiwac wiele danych, a ponadto moze byc skalowany, jezeli to jest konieczne.
+
+    Szybki:
+
+Rezygnacja z niektórych standardów pozwala MySQL bardzo skutecznie dzialac, zapewniajac tym zwiekszenie szybkosci dzialania.
+
+Wady MySQL
+
+    Znane ograniczenia:
+
+Zgodnie z projektem, MySQL nie zamierza robic wszystko, a chodzi o ograniczeniach funkcjonalnych, ze niektóre aplikacje moga wymagac.
+
+    Kwestia wiarygodnosci:
+
+Niektóre funkcje obslugiwane z MySQL (np. linki, operacji, audyt, itp.) sprawia, ze jest mniej wiarygodny w porównaniu z innymi SZBD.
+
+    Stagnacja rozwoju:
+
+Chociaz MySQL nadal jest techniczny open-source produkt, sa reklamacje dotyczace procesu rozwoju od momentu jego zakupu. Jednak, nalezy zauwazyc ze istnieja pewne bazy danych MySQL na podstawie zintegrowanych baz danych, które dodaja wartosc na standardowej instalacji MySQL (na przyklad MariaDB).
+
+link do tej strony : https://hostovita.pl/blog/porownanie-relacyjnych-systemow-zarzadzania-bazami-danych-sqlite-mysql-postgresql/
+====================================================
+
+DIAGRAM RELACJI ENCJI:
+
+do opisu relacji pomiedzy tabelami uzywamy notacji martina 
+
+mamy same realcje jeden do wielu
+
+lista wszystkich relacji:
+
+PEOPLES:PERSON_ID        --> USERS:PERSON_ID
+
+AIR_PORT_LIST:AIRPORT_ID --> FLIGHTS:START_AIRPORT_ID
+AIR_PORT_LIST:AIRPORT_ID --> FLIGHTS:FINISH_AIRPORT_ID
+PEOPLES:PERSON_ID        --> FLIGHTS:CAPITAN_ID
+PEOPLES:PERSON_ID        --> FLIGHTS:FIRST_OFFICER_ID
+PLANES:PLANES_ID         --> FLIGHTS:PLANE_ID
+
+USERS:USER_ID            --> PASSANGERS:USER_ID
+FLIGHTS:FLIGHT_ID        --> PASSANGERS:FLIGHT_ID
+
+IDENTYFIKACJA TRANSAKCJI: 
+
+nie wiem wlasnie o co mu chodzi, ogólnie bedziemy mieli 2/zdefiniowane transakcje: jedna do usuwania pasazerów, druga do usuwania lotów i trzecia do usuwania userów potrzebujemy je bo operujemy wtedy na wiecej niz jednej tabeli i jesli w pierwszej wszystko zrobimy ok a w drugiej cos sie nie powiedzie to musimy wszystko cofnac tzn w transakcji jest kilka operacji i albo wszystkie sie musza powiesc albo nie wykona sie zadna. ale o co chodzi z ta identyfikacja to nie wiem :(
+
+SPOSÓB ZAPEWNIENIA SPÓJNOSCI:
+
+za zapewnienie spójnosci odpowiada sam nasz silnik bazodanowy bo podczas tworzenia bazy danych zdefiniowalismy wszystkie klucze obce itp ( to sa te linijki "FOREIGN KEY (...) REFERENCES ...(...)") wiec jesli cos sie nie bedzie zgadzalo to silnik bazodanowy wywali blad np. gdy do lotów bedziemy chcieli dodac id_samolotu który nie istnieje baza danych nam na to nie pozwoli i zwróci blad (zalety MySQL :) )
+
+tutaj na stronie 7 jest to poniekad opisane opisane:
+http://wazniak.mimuw.edu.pl/images/7/74/BD-2st-1.2-w01.tresc-1.1.pdf
