@@ -4,7 +4,7 @@
 DROP TABLE PASSANGERS; 
 DROP TABLE FLIGHTS;
 DROP TABLE USERS;
-DROP TABLE PILOTS;
+DROP TABLE PEOPLES;
 DROP TABLE AIR_PORT_LIST;
 DROP TABLE PLANES;
 
@@ -27,17 +27,11 @@ CREATE TABLE AIR_PORT_LIST
 	CAPACITY VARCHAR(25) not null -- how many planes on this airport in the same time 
 );
    
-CREATE TABLE PILOTS
+CREATE TABLE PEOPLES 
 (  
-	PILOT_ID INT primary key not null auto_increment,
-	FIRST_NAME VARCHAR(20), 
-	LAST_NAME VARCHAR(25) not null,
-	ADDRESS_FOR_LETTERS VARCHAR(40), 
-    TELEPHONE VARCHAR(9) not null,
-    EMAIL_ADRES VARCHAR(30) not null,
-	POSSITION ENUM("CAPITAN", "FIRST OFFICER")not null,
-    SALARY DECIMAL(9,2),
-    USER_PASSWORD VARCHAR(255) not null
+	PERSON_ID INT primary key not null auto_increment, 
+    POSSITION ENUM("CAPITAN", "FIRST OFFICER")not null,
+    SALARY DECIMAL(9,2)
 );
         
 CREATE TABLE USERS
@@ -45,11 +39,14 @@ CREATE TABLE USERS
 	USER_ID INT primary key not null auto_increment,
 	FIRST_NAME VARCHAR(20), 
 	LAST_NAME VARCHAR(25) not null,
+    PERSON_ID INT DEFAULT NULL, -- set if user is worker
 	ADDRESS_FOR_LETTERS VARCHAR(40), 
     TELEPHONE VARCHAR(9) not null,
     EMAIL_ADRES VARCHAR(30) not null,
-    PERMISSION_TYPE ENUM("CLIENT","ADMIN") not null,
-    USER_PASSWORD VARCHAR(255) not null
+    PERMISSION_TYPE ENUM("CLIENT", "WORKER", "ADMIN") not null,
+    USER_PASSWORD VARCHAR(255) not null,
+    
+    FOREIGN KEY (PERSON_ID) REFERENCES PEOPLES(PERSON_ID)
 );
     
 CREATE TABLE FLIGHTS 
@@ -67,8 +64,8 @@ CREATE TABLE FLIGHTS
 
 	FOREIGN KEY (START_AIRPORT_ID) REFERENCES AIR_PORT_LIST(AIRPORT_ID),
     FOREIGN KEY (FINISH_AIRPORT_ID) REFERENCES AIR_PORT_LIST(AIRPORT_ID), 
-    FOREIGN KEY (CAPITAN_ID) REFERENCES PILOTS(PILOT_ID),
-    FOREIGN KEY (FIRST_OFFICER_ID) REFERENCES PILOTS(PILOT_ID),
+    FOREIGN KEY (CAPITAN_ID) REFERENCES PEOPLES(PERSON_ID),
+    FOREIGN KEY (FIRST_OFFICER_ID) REFERENCES PEOPLES(PERSON_ID),
     FOREIGN KEY (PLANE_ID) REFERENCES PLANES(PLANE_ID)
 );
     
@@ -126,29 +123,16 @@ Insert into AIR_PORT_LIST
 		'Warsaw',50
     );
     
--- PILOTS
+-- PEOPLES
 
-Insert into PILOTS
+Insert into PEOPLES
 	(
-		FIRST_NAME, LAST_NAME, ADDRESS_FOR_LETTERS, TELEPHONE, EMAIL_ADRES, POSSITION, SALARY, USER_PASSWORD
+		POSSITION, SALARY
     )
 	values 
     (
-		'Jan', 'Kowalski', 'Warsaw Plsc Wolniosci 123', '543234122', 'JKwalski78@gmail.com', 'CAPITAN', 5000.00, '2f3cf1102675a149392efd5bb6a12aa7'
+		'CAPITAN', 5000.00
     );
-    
-
--- USERS
-
-Insert into USERS
-	(
-		FIRST_NAME, LAST_NAME, ADDRESS_FOR_LETTERS, TELEPHONE, EMAIL_ADRES, PERMISSION_TYPE, USER_PASSWORD
-    )
-	values 
-    (
-		 "Jan", "Kowalski", "Warszawa Plac Wolnośći 1", "787456876", "JKowalski@gmail.com", "CLIENT", "2f3cf1102675a149392efd5bb6a12aa7"
-    );
-
     
 -- FLIGHTS
 
@@ -161,6 +145,17 @@ Insert into FLIGHTS
 		'2013-02-11', 1, 1,  123, 1, 1, 1, 450.99
     );
     
+-- USERS
+
+Insert into USERS
+	(
+		FIRST_NAME, LAST_NAME, PERSON_ID, ADDRESS_FOR_LETTERS, TELEPHONE, EMAIL_ADRES, PERMISSION_TYPE, USER_PASSWORD
+    )
+	values 
+    (
+		 "Jan", "Kowalski", NULL,  "Warszawa Plac Wolnośći 1", "787456876", "JKowalski@gmail.com", "CLIENT", "2f3cf1102675a149392efd5bb6a12aa7"
+    );
+
 -- PASSANGERS
 
 Insert into PASSANGERS
@@ -173,7 +168,7 @@ Insert into PASSANGERS
     );
 
 -- --------------------------------------------------------------
--- TRASHS
+-- TARSHS
 -- --------------------------------------------------------------
 
 -- DELETE FROM Planes where plane_id = 1;
